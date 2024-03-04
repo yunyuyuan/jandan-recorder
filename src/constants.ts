@@ -1,0 +1,67 @@
+export const InterruptUrls = [
+  /**
+   * TODO 文章发布: N/A
+  */
+
+  /**
+   * 创建 问答/树洞/随手拍/无聊图 : /api/comment/create
+    request 
+    {
+      author: "",
+      email: "",
+      comment: "",
+      comment_post_ID: ""
+    }
+    response string(id)
+   */
+  "/api/comment/create", 
+  /**
+   * 楼中回复: /api/tucao/create
+    request 
+    {
+      content: "",
+      comment_id?: 5637737, // 树洞id
+      comment_post_ID: 102312
+    }
+    response
+    {
+      "code": 0,
+      "msg": "success",
+      "data": {
+        "comment_ID": 12039174,
+        "comment_author": "xiaoc",
+        "comment_content": "祝福！",
+        "comment_date": "2024-03-04T15:53:55.267675774+08:00",
+        "comment_date_int": 1709538835,
+        "comment_post_ID": 5637795,
+        "comment_parent": 102312,
+        "comment_reply_ID": 0,
+        "is_jandan_user": 0,
+        "is_tip_user": 0,
+        "vote_negative": 0,
+        "vote_positive": 0
+      }
+    }
+   */
+  "/api/tucao/create", 
+  /**
+   * BBS发布: /api/forum/posts
+    request
+    {
+      "title": "",
+      "content": "",
+      "page_id": 112928
+    }
+   */
+  // TODO "/api/forum/posts", 
+  /**
+   * BBS吐槽: /api/forum/replies
+    request
+    {
+      "content": "",
+      "post_id": 1282,
+      "page_id": 112928
+    }
+   */
+  // TODO "/api/forum/replies", 
+] as const;
