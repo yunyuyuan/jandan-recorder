@@ -66,12 +66,14 @@ declare global {
 
     if (unsafeWindow.axios) {
       unsafeWindow.axios.interceptors.response.use((response: any) => {
-        const requestData: any = {};
-        (response.config.data as FormData)?.forEach(function(value, key){
-          requestData[key] = value;
-        });
-        const callback = getCallback(response.config.url, requestData);
-        callback(response.data);
+        try {
+          const requestData: any = {};
+          (response.config.data as FormData)?.forEach(function(value, key){
+            requestData[key] = value;
+          });
+          const callback = getCallback(response.config.url, requestData);
+          callback(response.data);
+        } catch {}
         return response;
       });
     }
