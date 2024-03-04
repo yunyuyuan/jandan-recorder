@@ -46,20 +46,22 @@ declare global {
     $.ajax = function (settings?: string | JQuery.AjaxSettings): JQuery.jqXHR {
       // 目前煎蛋都是 $.ajax(settings) 来调用的，所以不考虑单独传入 url 的情况
       if (typeof settings == 'object') {
-        const url = settings.url! as typeof InterruptUrls[number];
-        if (InterruptUrls.includes(url)) {
-          const originCallback = settings.success!;
-          let requestData = settings.data;
-          if (typeof requestData == 'string') {
-            const serializedObject: any = {};
-            for (const [key, value] of new URLSearchParams(requestData)) {
-              serializedObject[key] = value;
+        try {
+          const url = settings.url! as typeof InterruptUrls[number];
+          if (InterruptUrls.includes(url)) {
+            const originCallback = settings.success!;
+            let requestData = settings.data;
+            if (typeof requestData == 'string') {
+              const serializedObject: any = {};
+              for (const [key, value] of new URLSearchParams(requestData)) {
+                serializedObject[key] = value;
+              }
+              requestData = serializedObject;
             }
-            requestData = serializedObject;
+            const callback = getCallback(url, requestData);
+            settings.success = Array.isArray(originCallback) ? originCallback.splice(0, 0, callback) : [originCallback, callback];
           }
-          const callback = getCallback(url, requestData);
-          settings.success = Array.isArray(originCallback) ? originCallback.splice(0, 0, callback) : [originCallback, callback];
-        }
+        } catch {}
       }
       return originAjax(...arguments);
     }
