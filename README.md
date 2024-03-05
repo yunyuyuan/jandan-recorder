@@ -11,3 +11,6 @@
 - [ ] 自动删除n天前的记录
 - [ ] 自动删除未过审/不存在/已失效的记录
 - [ ] 显示实时oo和xx数量
+
+## changelog
+[changelog](https://github.com/yunyuyuan/jandan-recorder/blob/main/CHANGELOG.md)

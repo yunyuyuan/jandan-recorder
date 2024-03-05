@@ -6,11 +6,12 @@ export default defineConfig({
   plugins: [
     monkey({
       entry: 'src/main.ts',
+      clientAlias: "monkeyClient",
       userscript: {
         name: "煎蛋吐槽记录器",
         description: "煎蛋吐槽记录器，自动记录发送过的主题和评论",
         license: "MIT",
-        version: "0.0.6",
+        version: "0.0.7",
         namespace: 'yunyuyuan/jandan-recorder',
         match: ['*://*.jandan.net/*'],
       },

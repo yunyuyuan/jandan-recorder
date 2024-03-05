@@ -1,14 +1,15 @@
 import { getList, updateStorage } from './storage';
 import './style.scss';
+import { $ } from './utils';
 
 const ModalId = 'jandan-recorder-modal';
 
 export function initUI () {
-  const container = $('#header .nav-items .nav-item:last-of-type');
+  const memberLink = $('a[href="/member"]');
   const myPost = $('<a/>');
   myPost.addClass('nav-link jandan-record-link')
   myPost.text('我的吐槽');
-  myPost.appendTo(container);
+  memberLink.parent().append(myPost);
   
   const modalContainer = $('<div/>', {id: ModalId});
   
@@ -53,7 +54,7 @@ export function renderList() {
   const bodyEl = $(`#${ModalId} tbody`);
   bodyEl.empty();
   if (list.length > 0) {
-    list.forEach(function(item, idx) {
+    list.sort((a, b) => b.timestamp - a.timestamp).forEach(function(item, idx) {
       const row = $('<tr>');
       row.append($('<td>').text(new Date(item.timestamp).toLocaleString()));
       row.append($('<td>').text(item.isCreate ? '自己创建' : '评论吐槽'));
