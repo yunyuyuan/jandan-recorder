@@ -1,0 +1,9 @@
+#header .nav-items .nav-item:last-of-type {
+  display: flex;
+  .jandan-record-link {
+    cursor: pointer;
+  }
+}
+.jandan-record-link {
+  word-break: keep-all;
+}

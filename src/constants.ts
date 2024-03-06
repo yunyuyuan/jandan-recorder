@@ -52,8 +52,15 @@ export const InterruptUrls = [
       "content": "",
       "page_id": 112928
     }
+    response 
+    {
+        "code": 0,
+        "msg": "success",
+        "data": ""
+        "post_id": ???
+    }
    */
-  // TODO "/api/forum/posts", 
+  // TODO "/api/forum/posts", 没有返回id，所以暂时不做
   /**
    * BBS吐槽: /api/forum/replies
     request
@@ -63,5 +70,9 @@ export const InterruptUrls = [
       "page_id": 112928
     }
    */
-  // TODO "/api/forum/replies", 
+  "/api/forum/replies", 
 ] as const;
+
+export const ShowModalEvent = 'show-modal' as const;
+export const PushRecordEvent = 'push-record' as const;
+export const SettingsStorageKey = 'jandan-recorder-settings';
