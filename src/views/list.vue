@@ -37,7 +37,7 @@ const saveList = () => {
 }
 
 // 新增
-emitter.on(PushRecordEvent, (_, newItem?: ListItem) => {
+emitter.on(PushRecordEvent, (newItem?: any) => {
   if (!newItem) return;
   list.unshift(newItem);
   saveList();
