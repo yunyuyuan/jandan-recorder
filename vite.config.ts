@@ -13,7 +13,7 @@ export default defineConfig({
         name: "煎蛋吐槽记录器",
         description: "煎蛋吐槽记录器，自动记录发送过的主题和评论",
         license: "MIT",
-        version: "1.0.1",
+        version: "1.0.2",
         namespace: 'yunyuyuan/jandan-recorder',
         match: ['*://*.jandan.net/*'],
       }, 
