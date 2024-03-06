@@ -55,7 +55,7 @@ watch(() => props.inSetting, (inSetting) => {
     // 列表可能会自动删除，所以保存一次
     saveList();
   }
-});
+}, {immediate: true});
 </script>
 
 <template>

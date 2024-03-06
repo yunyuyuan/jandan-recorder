@@ -25,7 +25,7 @@ watch(() => props.inSetting, (inSetting) => {
   if (inSetting) {
     refreshSettings();
   }
-});
+}, {immediate: true});
 </script>
 
 <template>
