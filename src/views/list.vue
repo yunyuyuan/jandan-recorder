@@ -1,8 +1,14 @@
 <script setup lang="ts">
-import { onMounted, reactive, toRaw } from 'vue';
+import { onMounted, reactive, toRaw, watch } from 'vue';
 import { ListItem } from '../types';
 import { emitter } from '../utils';
 import { PushRecordEvent, SettingsStorageKey } from '../constants';
+
+const props = defineProps({
+  inSetting: {
+    type: Boolean
+  }
+})
 
 const StorageKey = 'jandan-recorder';
 
@@ -43,10 +49,12 @@ const removeListItem = (idx: number) => {
   saveList();
 }
 
-onMounted(() => {
-  refreshList();
-  // 首次加载时，列表可能会自动删除，所以保存一次
-  saveList();
+watch(() => props.inSetting, (inSetting) => {
+  if (!inSetting) {
+    refreshList();
+    // 列表可能会自动删除，所以保存一次
+    saveList();
+  }
 });
 </script>
 

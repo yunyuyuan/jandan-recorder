@@ -18,8 +18,8 @@ const inSetting = ref(false);
   <div v-show="showModal" id="jandan-recorder-modal" @mousedown="showModal = false">
     <div class="inner" @mousedown="(e) => e.stopPropagation()">
       <button class="switcher" @click="inSetting = !inSetting">{{ inSetting ? '返回列表(设置会自动保存)' : '前往设置' }}</button>
-      <list v-if="!inSetting" />
-      <settings v-else />
+      <list v-show="!inSetting" :inSetting="inSetting" />
+      <settings v-show="inSetting" :inSetting="inSetting" />
     </div>
   </div>
 </template>

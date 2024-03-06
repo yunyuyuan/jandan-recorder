@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import { onMounted, reactive, toRaw } from 'vue';
+import { reactive, toRaw, watch } from 'vue';
 import { SettingsStorageKey } from '../constants';
 
+const props = defineProps({
+  inSetting: {
+    type: Boolean
+  }
+})
 const settings = reactive<Record<string, any>>({});
 
 const refreshSettings = () => {
@@ -16,7 +21,11 @@ const inputNumber = (e: Event) => {
   }));
 }
 
-onMounted(refreshSettings);
+watch(() => props.inSetting, (inSetting) => {
+  if (inSetting) {
+    refreshSettings();
+  }
+});
 </script>
 
 <template>
