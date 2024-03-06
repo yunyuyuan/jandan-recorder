@@ -13,14 +13,14 @@ export default defineConfig({
         name: "煎蛋吐槽记录器",
         description: "煎蛋吐槽记录器，自动记录发送过的主题和评论",
         license: "MIT",
-        version: "1.0.0",
+        version: "1.0.1",
         namespace: 'yunyuyuan/jandan-recorder',
         match: ['*://*.jandan.net/*'],
       }, 
       build: {
         fileName: 'jandan-recorder.user.js',
         externalGlobals: {
-          vue: cdn.jsdelivr('Vue', 'dist/vue.global.prod.js'),
+          vue: cdn.unpkg('Vue', 'dist/vue.global.prod.js'),
         },
       },
     }), 
