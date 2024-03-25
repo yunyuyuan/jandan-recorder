@@ -12,6 +12,7 @@ function processResponse(url: typeof InterceptUrls[number], requestData: any, re
     case '/api/comment/create':
       item = {
         url: `/t/${res}`,
+        urlWithAnchor: `/t/${res}`,
         isCreate: true,
         content: requestData.comment,
         timestamp: Date.now() 
@@ -22,7 +23,8 @@ function processResponse(url: typeof InterceptUrls[number], requestData: any, re
         // 一种特殊情况——在首页文章里的吐槽
         const isPost = _window.location.pathname.startsWith('/p/');
         item = {
-          url: isPost ? `/p/${requestData.comment_post_ID}#${res.data.comment_ID}` : `/t/${requestData.comment_id}#tucao-${res.data.comment_ID}`,
+          url: isPost ? `/p/${requestData.comment_post_ID}` : `/t/${requestData.comment_id}`,
+          urlWithAnchor: isPost ? `/p/${requestData.comment_post_ID}#${res.data.comment_ID}` : `/t/${requestData.comment_id}#tucao-${res.data.comment_ID}`,
           isCreate: false,
           content: requestData.content,
           timestamp: Date.now()
@@ -33,6 +35,7 @@ function processResponse(url: typeof InterceptUrls[number], requestData: any, re
       if (res.msg == 'success') {        
         item = {
           url: `/bbs#/topic/${requestData.post_id}`,
+          urlWithAnchor: `/bbs#/topic/${requestData.post_id}`,
           isCreate: false,
           content: requestData.content,
           timestamp: Date.now()

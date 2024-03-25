@@ -76,3 +76,6 @@ export const InterruptUrls = [
 export const ShowModalEvent = 'show-modal' as const;
 export const PushRecordEvent = 'push-record' as const;
 export const SettingsStorageKey = 'jandan-recorder-settings';
+
+export const SettingsKeyAutoDeleteDay = 'auto-delete-day';
+export const SettingsKeyAutoDelete404 = 'auto-delete-404';

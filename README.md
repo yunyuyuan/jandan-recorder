@@ -1,6 +1,6 @@
 # 煎蛋吐槽记录器
 
-> Github地址：https://github.com/yunyuyuan/jandan-recorder
+> Github地址：[https://github.com/yunyuyuan/jandan-recorder](https://github.com/yunyuyuan/jandan-recorder)
 
 ## 待办
 - [x] 树洞/问答/随手拍/无聊图 的创建和评论
@@ -12,7 +12,7 @@
 - [x] 删除记录
 - [ ] 检测审核状态
 - [x] 自动删除n天前的记录
-- [ ] 自动删除未过审/不存在/已失效的记录
+- [x] 自动删除已失效(404)的记录
 - [ ] 显示实时oo和xx数量
 
 ## 更新日志
