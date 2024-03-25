@@ -103,7 +103,7 @@ watch(() => props.inSetting, (inSetting) => {
           <td>{{ item.isCreate ? '自己创建' : '评论吐槽' }}</td>
           <td>{{ item.content }}</td>
           <td>
-            <a target="_blank" :href="item.urlWithAnchor">点击前往</a>
+            <a target="_blank" :href="item.urlWithAnchor || item.url">点击前往</a>
           </td>
           <td>
             <button @click="removeListItem(idx)">删除</button>
