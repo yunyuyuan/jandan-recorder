@@ -4,7 +4,7 @@ export type ListItem = {
   urlWithAnchor: string,
   content: string,
   timestamp: number,
-  time?: Date,
+  lastCheck404?: number,
   oo?: number,
   xx?: number,
   approved?: boolean,

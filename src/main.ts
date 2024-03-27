@@ -8,6 +8,7 @@ import "../assets/style.scss";
 
 function processResponse(url: typeof InterceptUrls[number], requestData: any, res: any) {
   let item: ListItem | null = null;
+  const now = Date.now();
   switch(url) {
     case '/api/comment/create':
       item = {
@@ -15,7 +16,8 @@ function processResponse(url: typeof InterceptUrls[number], requestData: any, re
         urlWithAnchor: `/t/${res}`,
         isCreate: true,
         content: requestData.comment,
-        timestamp: Date.now() 
+        timestamp: now,
+        lastCheck404: now,
       }
       break;
     case '/api/tucao/create':
@@ -27,7 +29,8 @@ function processResponse(url: typeof InterceptUrls[number], requestData: any, re
           urlWithAnchor: isPost ? `/p/${requestData.comment_post_ID}#${res.data.comment_ID}` : `/t/${requestData.comment_id}#tucao-${res.data.comment_ID}`,
           isCreate: false,
           content: requestData.content,
-          timestamp: Date.now()
+          timestamp: now,
+          lastCheck404: now,
         }
       }
       break;
@@ -38,7 +41,8 @@ function processResponse(url: typeof InterceptUrls[number], requestData: any, re
           urlWithAnchor: `/bbs#/topic/${requestData.post_id}`,
           isCreate: false,
           content: requestData.content,
-          timestamp: Date.now()
+          timestamp: now,
+          lastCheck404: now,
         }
       }
       break;

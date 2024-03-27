@@ -16,12 +16,7 @@ const list = reactive<ListItem[]>([]);
 const oneDay = 1000 * 60 * 60 * 24;
 
 const getListFromStorage = () => {
-  list.splice(0, list.length, ...(JSON.parse(localStorage.getItem(ListStorageKey) || '[]') as ListItem[]).map(item => {
-    return {
-      ...item,
-      time: new Date(item.timestamp)
-    }
-  }));
+  list.splice(0, list.length, ...(JSON.parse(localStorage.getItem(ListStorageKey) || '[]') as ListItem[]));
 }
 
 const saveList = () => {
@@ -59,12 +54,10 @@ watch(() => props.inSetting, (inSetting) => {
       // 自动删除n天前
       if (typeof autoDeleteDay === 'number' && autoDeleteDay > 0) {
         list.splice(0, list.length, ...list.filter(item => {
-          if (item.time instanceof Date) {
-            return item.time.getTime() > now - oneDay * autoDeleteDay;
-          }
-          return true;
+          return item.timestamp > now - oneDay * autoDeleteDay;
         }));
       }
+      saveList();
 
       // 自动删除404
       if (autoDelete404) {
@@ -72,18 +65,28 @@ watch(() => props.inSetting, (inSetting) => {
         
         (async () => {
           for (const url of allUrls) {
-            const res = await fetch(url);
-            if (res.status === 404) {
-              list.splice(0, list.length, ...list.filter(item => {
-                return item.url !== url;
-              }));
-              saveList();
+            const biggest = list.filter(item => item.url === url)
+                              .map(item => item.lastCheck404 || 0)
+                              .sort((a, b) => a - b)
+                              .pop()!;
+            if (biggest < now - oneDay) {
+              const res = await fetch(url);
+              if (res.status === 404) {
+                list.splice(0, list.length, ...list.filter(item => {
+                  return item.url !== url;
+                }));
+              }
+              await (new Promise(resolve => setTimeout(resolve, 1000)));
             }
-            await (new Promise(resolve => setTimeout(resolve, 1000)));
+            list.forEach(item => {
+              if (item.url === url) {
+                item.lastCheck404 = now
+              }
+            })
+            saveList();
           }
         })();
       }
-      saveList();
     }
   }
 }, {immediate: true});
@@ -99,7 +102,7 @@ watch(() => props.inSetting, (inSetting) => {
       </thead>
       <tbody>
         <tr v-for="item,idx of list">
-          <td>{{ item.time?.toLocaleString() }}</td>
+          <td>{{ new Date(item.timestamp).toLocaleString() }}</td>
           <td>{{ item.isCreate ? '自己创建' : '评论吐槽' }}</td>
           <td>{{ item.content }}</td>
           <td>
