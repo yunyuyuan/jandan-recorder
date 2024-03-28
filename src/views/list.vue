@@ -76,13 +76,13 @@ watch(() => props.inSetting, (inSetting) => {
                   return item.url !== url;
                 }));
               }
+              list.forEach(item => {
+                if (item.url === url) {
+                  item.lastCheck404 = now
+                }
+              })
               await (new Promise(resolve => setTimeout(resolve, 1000)));
             }
-            list.forEach(item => {
-              if (item.url === url) {
-                item.lastCheck404 = now
-              }
-            })
             saveList();
           }
         })();
