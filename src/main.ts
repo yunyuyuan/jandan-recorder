@@ -1,4 +1,4 @@
-import { InterruptUrls as InterceptUrls, PushRecordEvent, ShowModalEvent } from './constants';
+import { InterceptUrls as InterceptUrls, PushRecordEvent, ShowModalEvent } from './constants';
 import { ListItem } from './types';
 import { _window, $, emitter } from './utils';
 import { createApp } from 'vue';
@@ -10,6 +10,7 @@ function processResponse(url: typeof InterceptUrls[number], requestData: any, re
   let item: ListItem | null = null;
   const now = Date.now();
   switch(url) {
+    case '/jandan-comment.php':
     case '/api/comment/create':
       item = {
         url: `/t/${res}`,

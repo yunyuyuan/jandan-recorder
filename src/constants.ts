@@ -1,10 +1,10 @@
-export const InterruptUrls = [
+export const InterceptUrls = [
   /**
    * TODO 文章发布: N/A
   */
 
   /**
-   * 创建 问答/树洞/随手拍/无聊图 : /api/comment/create
+   * 创建 问答/树洞/随手拍/无聊图 : /api/comment/create, /jandan-comment.php
     request 
     {
       author: "",
@@ -15,6 +15,7 @@ export const InterruptUrls = [
     response string(id)
    */
   "/api/comment/create", 
+  "/jandan-comment.php", 
   /**
    * 楼中回复: /api/tucao/create
     request 

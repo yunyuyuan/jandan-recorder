@@ -147,4 +147,4 @@ table {
     }
   }
 }
-</style>../types
+</style>
