@@ -112,4 +112,20 @@ myPost.onclick = () => {
 }
 memberLink!.parentElement!.appendChild(myPost);
 
+if (_window.location.pathname === '/bbs') {
+  fetch('/api/member/get_info').then(res => {
+    if (res.ok) {
+      res.json().then(res => {
+        if (res.data.id) {
+          const myBbs = document.createElement('a');
+          myBbs.innerText = '我的贴子';
+          myBbs.href = `/bbs#/user/${res.data.id}`;
+          myBbs.target = '_blank';
+          document.querySelector('.list-header')?.appendChild(myBbs);
+        }
+      })
+    }
+  })
+}
+
 console.log('煎蛋吐槽记录器加载成功！');

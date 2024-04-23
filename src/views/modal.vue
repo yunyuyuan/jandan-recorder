@@ -11,13 +11,24 @@ emitter.on(ShowModalEvent, () => {
   showModal.value = true;
 })
 
+const close = () => {
+  showModal.value = false;
+}
+
 const inSetting = ref(false);
 </script>
 
 <template>
   <div v-show="showModal" id="jandan-recorder-modal" @mousedown="showModal = false">
     <div class="inner" @mousedown="(e) => e.stopPropagation()">
-      <button class="switcher" @click="inSetting = !inSetting">{{ inSetting ? '返回列表(设置会自动保存)' : '前往设置' }}</button>
+      <div class="header">
+        <button class="switcher" @click="inSetting = !inSetting">{{ inSetting ? '返回列表(设置会自动保存)' : '前往设置' }}</button>
+        <span class="close" @click="close()">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 21L12 12M12 12L3 3M12 12L21.0001 3M12 12L3 21.0001" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </div>
       <list v-show="!inSetting" :inSetting="inSetting" />
       <settings v-show="inSetting" :inSetting="inSetting" />
     </div>
@@ -54,10 +65,30 @@ const inSetting = ref(false);
     flex-direction: column;
   }
   
-  .switcher {
+  .header {
+    position: relative;
     margin-bottom: 10px;
-    font-size: 15px;
-    padding: 4px 8px;
+    width: 100%;
+    .switcher {
+      font-size: 15px;
+      padding: 4px 8px;
+      margin: auto;
+    }
+    .close {
+      position: absolute;
+      right: 0;
+      cursor: pointer;
+      svg {
+        stroke: black;
+        width: 25px;
+        height: 25px;
+      }
+      &:hover {
+        svg {
+          stroke: red;
+        }
+      }
+    }
   }
 }
 </style>
