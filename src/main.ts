@@ -1,7 +1,7 @@
-import { InterceptUrls as InterceptUrls, PushRecordEvent, ShowModalEvent } from './constants';
+import { DefaultSettings, InterceptUrls as InterceptUrls, PushRecordEvent, SettingsStorageKey, ShowModalEvent } from './constants';
 import { ListItem } from './types';
 import { _window, $, emitter } from './utils';
-import { createApp } from 'vue';
+import { createApp, reactive } from 'vue';
 import modal from './views/modal.vue';
 import "../assets/style.scss";
 
@@ -95,6 +95,10 @@ if (_window.axios) {
 
 
 const App = createApp(modal);
+App.provide("settings", reactive({
+  ...DefaultSettings,
+  ...JSON.parse(localStorage.getItem(SettingsStorageKey) || '{}')
+}))
 App.mount(
   (() => {
     const app = document.createElement('div');

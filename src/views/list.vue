@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { reactive, ref, toRaw, watch } from 'vue';
-import { ListItem } from '../types';
+import { inject, reactive, toRaw, watch, readonly, computed, onMounted } from 'vue';
+import { ListItem, Settings } from '../types';
 import { emitter } from '../utils';
-import { PushRecordEvent, SettingsKeyAutoDelete404, SettingsKeyAutoDeleteDay, SettingsStorageKey } from '../constants';
+import { OneDay, PushRecordEvent, SettingsKeyAutoDelete404, SettingsKeyAutoDeleteDay, SettingsKeyFoldItem } from '../constants';
 
 const props = defineProps({
   inSetting: {
@@ -10,10 +10,30 @@ const props = defineProps({
   }
 })
 
+const settings = readonly(inject<Settings>("settings")!);
+
 const ListStorageKey = 'jandan-recorder';
 
 const list = reactive<ListItem[]>([]);
-const oneDay = 1000 * 60 * 60 * 24;
+const openedUrls = reactive<Set<string>>(new Set());
+const listWithFold = computed(() => {
+  if (settings[SettingsKeyFoldItem]) {
+    const result: ListItem[] = [];
+    for (const item of list) {
+      const sameUrlItemIdx = result.findIndex(i => i.url === item.url);
+      if (sameUrlItemIdx > -1) {
+        const sameUrlItem = result[sameUrlItemIdx];
+        sameUrlItem.childrenNum! += 1
+        result.splice(sameUrlItemIdx+sameUrlItem.childrenNum!, 0, { ...item, isChild: true });
+      } else {
+        result.push({ ...item, childrenNum: 0 });
+      }
+    }
+    return result;
+  } else {
+    return list;
+  }
+})
 
 const getListFromStorage = () => {
   list.splice(0, list.length, ...(JSON.parse(localStorage.getItem(ListStorageKey) || '[]') as ListItem[]));
@@ -36,60 +56,64 @@ const removeListItem = (idx: number) => {
   list.splice(idx, 1);
   saveList();
 }
-  
-const processed = ref(false);
+
+const toggleOpened = (url: string) => {
+  if (openedUrls.has(url)) {
+    openedUrls.delete(url)
+  } else {
+    openedUrls.add(url)
+  }
+}
 
 watch(() => props.inSetting, (inSetting) => {
   if (!inSetting) {
     getListFromStorage();
-    // 处理自动删除，只在进入页面时处理一次
-    if (!processed.value) {
-      processed.value = true;
-      
-      const now = Date.now();
-      const settings = JSON.parse(localStorage.getItem(SettingsStorageKey) || '{}');
-      const autoDeleteDay = parseInt(settings[SettingsKeyAutoDeleteDay]);
-      const autoDelete404 = settings[SettingsKeyAutoDelete404];
-      
-      // 自动删除n天前
-      if (typeof autoDeleteDay === 'number' && autoDeleteDay > 0) {
-        list.splice(0, list.length, ...list.filter(item => {
-          return item.timestamp > now - oneDay * autoDeleteDay;
-        }));
-      }
-      saveList();
-
-      // 自动删除404
-      if (autoDelete404) {
-        const allUrls = new Set(list.map(item => item.url));
-        
-        (async () => {
-          for (const url of allUrls) {
-            const biggest = list.filter(item => item.url === url)
-                              .map(item => item.lastCheck404 || 0)
-                              .sort((a, b) => a - b)
-                              .pop()!;
-            if (biggest < now - oneDay) {
-              const res = await fetch(url);
-              if (res.status === 404) {
-                list.splice(0, list.length, ...list.filter(item => {
-                  return item.url !== url;
-                }));
-              }
-              list.forEach(item => {
-                if (item.url === url) {
-                  item.lastCheck404 = now
-                }
-              })
-              await (new Promise(resolve => setTimeout(resolve, 1000)));
-            }
-            saveList();
-          }
-        })();
-      }
-    }
   }
-}, {immediate: true});
+});
+
+onMounted(() => {
+  getListFromStorage();
+  // 处理自动删除，只在进入页面时处理一次
+  const now = Date.now();
+  const autoDeleteDay = parseInt(settings[SettingsKeyAutoDeleteDay]);
+
+  // 自动删除n天前
+  if (typeof autoDeleteDay === 'number' && autoDeleteDay > 0) {
+    list.splice(0, list.length, ...list.filter(item => {
+      return item.timestamp > now - OneDay * autoDeleteDay;
+    }));
+  }
+  saveList();
+
+  // 自动删除404
+  if (settings[SettingsKeyAutoDelete404]) {
+    const allUrls = new Set(list.map(item => item.url));
+
+    (async () => {
+      for (const url of allUrls) {
+        const biggest = list.filter(item => item.url === url)
+          .map(item => item.lastCheck404 || 0)
+          .sort((a, b) => a - b)
+          .pop()!;
+        if (biggest < now - OneDay) {
+          const res = await fetch(url);
+          if (res.status === 404) {
+            list.splice(0, list.length, ...list.filter(item => {
+              return item.url !== url;
+            }));
+          }
+          list.forEach(item => {
+            if (item.url === url) {
+              item.lastCheck404 = now
+            }
+          })
+          await (new Promise(resolve => setTimeout(resolve, 1000)));
+        }
+        saveList();
+      }
+    })();
+  }
+})
 </script>
 
 <template>
@@ -101,16 +125,24 @@ watch(() => props.inSetting, (inSetting) => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item,idx of list">
-          <td>{{ new Date(item.timestamp).toLocaleString() }}</td>
-          <td>{{ item.isCreate ? '自己创建' : '评论吐槽' }}</td>
-          <td>{{ item.content }}</td>
-          <td>
-            <a target="_blank" :href="item.urlWithAnchor || item.url">点击前往</a>
-          </td>
-          <td>
-            <button @click="removeListItem(idx)">删除</button>
-          </td>
+        <tr v-for="item, idx of listWithFold" :class="{'is-child': item.isChild}">
+          <template v-if="!item.isChild || openedUrls.has(item.url)">
+            <td>{{ new Date(item.timestamp).toLocaleString() }}</td>
+            <td>{{ item.isCreate ? '楼主' : '吐槽' }}</td>
+            <td>
+              {{ item.content }}
+              <template v-if="settings[SettingsKeyFoldItem] && item.childrenNum">
+                <br/>
+                <button @click="toggleOpened(item.url)">{{ openedUrls.has(item.url) ? '收起':'展开' }}{{ item.childrenNum }}条</button>
+              </template>
+            </td>
+            <td>
+              <a target="_blank" :href="item.urlWithAnchor || item.url">前往</a>
+            </td>
+            <td>
+              <button @click="removeListItem(idx)">删除</button>
+            </td>
+          </template>
         </tr>
         <span v-if="list.length === 0">一条都没有，赶快去吐槽吧！</span>
       </tbody>
@@ -123,25 +155,41 @@ watch(() => props.inSetting, (inSetting) => {
   overflow: auto;
   flex-grow: 1;
   align-self: stretch;
+  border: 1px solid #c1c1c1;
 }
+
 table {
   width: 100%;
   border-collapse: collapse;
+
   thead {
     border-radius: 12px 12px 0 0;
   }
-  thead th { 
+
+  thead th {
     padding: 10px 0;
     font-size: 16px;
-    position: sticky; 
-    top: 0; 
-    z-index: 1; 
+    position: sticky;
+    top: 0;
+    z-index: 1;
     background: rgb(200, 200, 200);
   }
+  
+  tbody {
+    tr {
+      &.is-child {
+        td {
+          border-color: transparent;
+        }
+      }
+    }
+  }
+
   tbody td {
     font-size: 14px;
     padding: 8px 0;
-    border-bottom: 1px solid rgb(218, 218, 218);
+    border-top: 1px solid rgb(218, 218, 218);
+
     @include pc {
       min-width: 80px;
     }

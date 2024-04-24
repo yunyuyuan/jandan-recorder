@@ -30,7 +30,7 @@ const inSetting = ref(false);
         </span>
       </div>
       <list v-show="!inSetting" :inSetting="inSetting" />
-      <settings v-show="inSetting" :inSetting="inSetting" />
+      <settings v-show="inSetting" />
     </div>
   </div>
 </template>

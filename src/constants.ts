@@ -1,3 +1,5 @@
+import { type Settings } from "./types";
+
 export const InterceptUrls = [
   /**
    * TODO 文章发布: N/A
@@ -74,9 +76,17 @@ export const InterceptUrls = [
   "/api/forum/replies", 
 ] as const;
 
+export const OneDay = 1000 * 60 * 60 * 24;
 export const ShowModalEvent = 'show-modal' as const;
 export const PushRecordEvent = 'push-record' as const;
 export const SettingsStorageKey = 'jandan-recorder-settings';
 
 export const SettingsKeyAutoDeleteDay = 'auto-delete-day';
 export const SettingsKeyAutoDelete404 = 'auto-delete-404';
+export const SettingsKeyFoldItem = 'fold-item';
+
+export const DefaultSettings: Settings = {
+  [SettingsKeyAutoDeleteDay]: "0",
+  [SettingsKeyAutoDelete404]: false,
+  [SettingsKeyFoldItem]: true,
+}
