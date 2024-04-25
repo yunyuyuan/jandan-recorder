@@ -12,6 +12,8 @@ jobs:
   build:
     name: Create Release
     runs-on: ubuntu-latest
+    env:
+      jandan_recorder_version_name: ${{  github.ref_name }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
