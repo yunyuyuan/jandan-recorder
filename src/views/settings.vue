@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { inject, onMounted, toRaw } from 'vue';
-import { SettingsKeyAutoDeleteDay, SettingsKeyAutoDelete404, SettingsKeyFoldItem, SettingsStorageKey, DefaultSettings } from '../constants';
+import { type UnwrapNestedRefs, inject, onMounted, toRaw } from 'vue';
+import { SettingsKeyAutoDeleteDay, SettingsKeyAutoDelete404, SettingsKeyFoldItem, SettingsStorageKey, DefaultSettings, SettingsKeyRGBName } from '../constants';
 import { Settings } from '../types';
 
 const version = import.meta.env.jandan_recorder_version_name;
-const settings = inject<Settings>("settings")!;
+const settings = inject<UnwrapNestedRefs<Settings>>("settings")!;
 
 const refreshSettings = () => {
   Object.assign(settings, {
@@ -41,6 +41,13 @@ const toggleFoldItem = (e: Event) => {
   refreshSettings();
 }
 
+const toggleRGBName = (e: Event) => {
+  updateSettings({
+    [SettingsKeyRGBName]: (e.target! as HTMLInputElement).checked
+  })
+  refreshSettings();
+}
+
 onMounted(() => {
   refreshSettings();
 })
@@ -60,6 +67,10 @@ onMounted(() => {
     <div title="在同一个贴子下面有多个吐槽，则自动折叠，但依然可以手动展开">
       <input type="checkbox" v-model="settings[SettingsKeyFoldItem]" @change="toggleFoldItem" />
       折叠主题相同的项目
+    </div>
+    <div title="给自己的昵称加上牛逼闪闪的RGB特效">
+      <input type="checkbox" v-model="settings[SettingsKeyRGBName]" @change="toggleRGBName" />
+      🪄个人名称RGB特效🪄
     </div>
     <div>
       <p>

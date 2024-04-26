@@ -1,16 +1,12 @@
 <script setup lang="ts">
-import { inject, reactive, toRaw, watch, readonly, computed, onMounted } from 'vue';
+import { inject, reactive, toRaw, watch, readonly, computed, onMounted, type UnwrapNestedRefs, type Ref, provide } from 'vue';
 import { ListItem, Settings } from '../types';
 import { emitter } from '../utils';
 import { OneDay, PushRecordEvent, SettingsKeyAutoDelete404, SettingsKeyAutoDeleteDay, SettingsKeyFoldItem } from '../constants';
 
-const props = defineProps({
-  inSetting: {
-    type: Boolean
-  }
-})
 
-const settings = readonly(inject<Settings>("settings")!);
+const settings = readonly(inject<UnwrapNestedRefs<Settings>>("settings")!);
+const inSetting = readonly(inject<Ref<boolean>>("inSetting")!);
 
 const ListStorageKey = 'jandan-recorder';
 
@@ -65,7 +61,7 @@ const toggleOpened = (url: string) => {
   }
 }
 
-watch(() => props.inSetting, (inSetting) => {
+watch(inSetting, (inSetting) => {
   if (!inSetting) {
     getListFromStorage();
   }

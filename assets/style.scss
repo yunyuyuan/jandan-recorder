@@ -7,3 +7,22 @@
 .jandan-record-link {
   word-break: keep-all;
 }
+.rainbow-text {
+  font-size: 1.1rem !important;
+  background: linear-gradient(to right, #6666ff, #0099ff , #00ff00, #ff3399, #6666ff);
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  animation: rainbow_animation 6s ease-in-out infinite !important;
+  background-size: 400% 100% !important;
+}
+
+@keyframes rainbow_animation {
+  0%,100% {
+      background-position: 0 0;
+  }
+
+  50% {
+      background-position: 100% 0;
+  }
+}

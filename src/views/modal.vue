@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ShowModalEvent } from '../constants';
 import { emitter } from '../utils';
-import list from './list.vue';
-import settings from './settings.vue';
-import { ref } from 'vue';
+import ListComp from './list.vue';
+import SettingsComp from './settings.vue';
+import { inject, ref } from 'vue';
+
+const inSetting = inject<boolean>("inSetting")!;
 
 const showModal = ref(false);
 
@@ -14,8 +16,6 @@ emitter.on(ShowModalEvent, () => {
 const close = () => {
   showModal.value = false;
 }
-
-const inSetting = ref(false);
 </script>
 
 <template>
@@ -29,8 +29,8 @@ const inSetting = ref(false);
           </svg>
         </span>
       </div>
-      <list v-show="!inSetting" :inSetting="inSetting" />
-      <settings v-show="inSetting" />
+      <list-comp v-show="!inSetting" />
+      <settings-comp v-show="inSetting" />
     </div>
   </div>
 </template>
