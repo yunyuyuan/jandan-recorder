@@ -1,35 +1,35 @@
 <script setup lang="ts">
-import { onMounted, provide, reactive, ref, watch } from 'vue';
-import ModalComp from './views/modal.vue';
-import { AjaxSuccessEvent, DefaultSettings, SettingsKeyRGBName, SettingsStorageKey } from './constants';
-import { _window, emitter } from './utils';
-import myBbs from './functions/my-bbs';
-import { addRGB, rmRGB } from './functions/rgb-name';
-import debounce from 'lodash/debounce';
-import initHttpInterception from './functions/http-intercept';
+import { onMounted, provide, reactive, ref, watch } from "vue";
+import ModalComp from "./views/modal.vue";
+import { AjaxSuccessEvent, DefaultSettings, SettingsKeyRGBName, SettingsStorageKey } from "./constants";
+import { _window, emitter } from "./utils";
+import myBbs from "./functions/my-bbs";
+import { addRGB, rmRGB } from "./functions/rgb-name";
+import debounce from "lodash/debounce";
+import initHttpInterception from "./functions/http-intercept";
 
 const settings = reactive({
   ...DefaultSettings,
-  ...JSON.parse(localStorage.getItem(SettingsStorageKey) || '{}')
-})
-const userData = reactive(<{
+  ...JSON.parse(localStorage.getItem(SettingsStorageKey) || "{}")
+});
+const userData = reactive<{
   id?: number,
   nickname?: string,
   username?: string
-}>({}));
+}>({});
 
-provide("settings", settings)
-provide("inSetting", ref(false))
-provide("userData", userData)
+provide("settings", settings);
+provide("inSetting", ref(false));
+provide("userData", userData);
 
 const documentMutation = debounce(() => {
-  myBbs(userData)
+  myBbs(userData);
   if (settings[SettingsKeyRGBName]) {
     setTimeout(() => {
       addRGB(userData.nickname);      
-    })
+    });
   }
-}, 200)
+}, 200);
 
 watch(settings, ({[SettingsKeyRGBName]: rgbEnabled}) => {
   if (!rgbEnabled) {
@@ -37,19 +37,19 @@ watch(settings, ({[SettingsKeyRGBName]: rgbEnabled}) => {
   } else {
     addRGB(userData.nickname);
   }
-})
+});
 
 onMounted(() => {
   // 获取登录用户信息
-  fetch('/api/member/get_info').then(res => {
+  fetch("/api/member/get_info").then(res => {
     if (res.ok) {
       res.json().then(res => {
-        if (res.data.id) {
+        if (res.data?.id) {
           Object.assign(userData, res.data);
         }
-      })
+      });
     }
-  })
+  });
 
   emitter.on(AjaxSuccessEvent, documentMutation);
   const observer = new MutationObserver(documentMutation);
@@ -57,13 +57,9 @@ onMounted(() => {
 
   documentMutation();
   initHttpInterception();
-})
+});
 </script>
 
 <template>
   <modal-comp />
 </template>
-
-<style lang="scss">
-
-</style>

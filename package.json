@@ -2,7 +2,6 @@
   "name": "jandan-recorder",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
@@ -12,16 +11,39 @@
     "@types/jquery": "^3.5.29",
     "@types/lodash": "^4.17.0",
     "@types/node": "^20.12.7",
+    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "@typescript-eslint/parser": "^5.22.0",
     "@vitejs/plugin-vue": "^5.0.4",
+    "eslint": "^8.15.0",
+    "eslint-plugin-vue": "^8.7.1",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
     "lodash": "^4.17.21",
     "sass": "^1.71.1",
+    "stylelint": "^14.8.2",
+    "stylelint-config-recommended-vue": "^1.4.0",
+    "stylelint-config-standard-scss": "^3.0.0",
     "typescript": "^5.3.3",
     "vite": "^5.0.11",
     "vite-plugin-monkey": "^3.5.1",
+    "vue-eslint-parser": "^9.4.2",
     "vue-tsc": "^2.0.5"
   },
   "dependencies": {
     "mitt": "^3.0.1",
     "vue": "^3.4.21"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,vue}": [
+      "eslint --fix"
+    ],
+    "*.{scss,vue}": [
+      "stylelint --fix"
+    ]
   }
 }
