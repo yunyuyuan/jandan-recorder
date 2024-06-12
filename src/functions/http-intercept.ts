@@ -89,9 +89,7 @@ export default function initHttpInterception(enableBBSReply = false) {
         emitter.emit(AjaxSuccessEvent);
         processResponse(response.config.url, parseRequestData(response.config.data), response.data);
         if (enableBBSReply && /^\/api\/forum\/replies\/\d+/.test(response.config.url)) {
-          setTimeout(() => {
-            postProcessBBSReplies(keyBy(response.data.data.list, "reply_id"));
-          }, 500);
+          postProcessBBSReplies(keyBy(response.data.data.list, "reply_id"));
         }
       } catch { /* empty */ }
       return response;

@@ -21,22 +21,23 @@ export function addMyLink(userData: UserData) {
 }
 
 export function postProcessBBSReplies(replies?: any) {
-  const threadContainer = document.getElementById("thread-container");
-  if (threadContainer && _window.location.pathname.startsWith("/bbs")) {
-    const bbsId = parseInt(_window.location.href.replace(/^.*?jandan.net\/bbs#\/topic\/(\d+)$/, "$1"));
-    if (bbsId !== currentBBSConfig.id) {
-      currentBBSConfig.replies = {};
-    }
-    currentBBSConfig.id = bbsId;
-    if (replies) {
-      Object.assign(currentBBSConfig.replies, replies);
-    }
+  setTimeout(() => {
+    const threadContainer = document.getElementById("thread-container");
+    if (threadContainer && _window.location.pathname.startsWith("/bbs")) {
+      const bbsId = parseInt(_window.location.href.replace(/^.*?jandan.net\/bbs#\/topic\/(\d+)$/, "$1"));
+      if (bbsId !== currentBBSConfig.id) {
+        currentBBSConfig.replies = {};
+      }
+      currentBBSConfig.id = bbsId;
+      if (replies) {
+        Object.assign(currentBBSConfig.replies, replies);
+      }
     
-    const currentPage = parseInt(threadContainer.querySelector(".page-nav li button.active")?.innerHTML || "");
-    if (currentPage > 0) {
-      const firstFloor = (currentPage - 1) * 40;
-      const refPages = new Set();
-      threadContainer.querySelectorAll(".reply-container > div").forEach((reply, index) => {
+      const currentPage = parseInt(threadContainer.querySelector(".page-nav li button.active")?.innerHTML || "");
+      if (currentPage > 0) {
+        const firstFloor = (currentPage - 1) * 40;
+        const refPages = new Set();
+        threadContainer.querySelectorAll(".reply-container > div").forEach((reply, index) => {
         // 纠正楼号
         reply.querySelector<HTMLElement>(".floor-number")!.innerText = `${firstFloor + index + 1}楼`;
         // 增加回复按钮
@@ -68,10 +69,11 @@ export function postProcessBBSReplies(replies?: any) {
           }
           return `${_1}<span class='jandan-record-reply-ref'>${_2}</span>`;
         });
-      });
-      refPages.forEach(page => _window.axios.get(`/api/forum/replies/${currentBBSConfig.id}?order=asc&page=${page}`).then());
+        });
+        refPages.forEach(page => _window.axios.get(`/api/forum/replies/${currentBBSConfig.id}?order=asc&page=${page}`).then());
+      }
     }
-  }
+  }, 500);
 }
 
 function tooltipListener(event: MouseEvent) {
