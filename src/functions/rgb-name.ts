@@ -3,16 +3,16 @@ import { _window } from "../utils";
 export const addRGB = (nickname?: string) => {
   getAllNickNameEl().forEach(el => {
     if (el.innerText == nickname) {
-      el.classList.add("rainbow-text");
+      el.classList.add("jandan-record-rainbow-text");
     } else {
-      el.classList.remove("rainbow-text");
+      el.classList.remove("jandan-record-rainbow-text");
     } 
   });
 };
 
 export const rmRGB = () => {
   getAllNickNameEl().forEach(el => {
-    el.classList.remove("rainbow-text");
+    el.classList.remove("jandan-record-rainbow-text");
   });
 };
 
@@ -29,9 +29,9 @@ const getAllNickNameEl = () => {
       result.push(...document.querySelectorAll<HTMLElement>(".row >.author >strong[title]"));
       result.push(...document.querySelectorAll<HTMLElement>(".tucao-author >span:first-of-type"));
       result.push(...document.querySelectorAll<HTMLElement>("#comments .comment-topic >b:first-of-type"));
+      result.push(...document.querySelectorAll<HTMLElement>(".commentlist >li[id] > b:first-of-type"));
       break;
     case "/dzh":
-      result.push(...document.querySelectorAll<HTMLElement>(".tucao-author-bar .tucao-author"));
       result.push(...document.querySelectorAll<HTMLElement>(".tucao-author-bar .tucao-author"));
       break;
     case "/bbs":      

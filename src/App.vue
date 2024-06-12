@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted, provide, reactive, ref, watch } from "vue";
 import ModalComp from "./views/modal.vue";
-import { AjaxSuccessEvent, DefaultSettings, SettingsKeyRGBName, SettingsStorageKey } from "./constants";
+import { AjaxSuccessEvent, DefaultSettings, SettingsKeyBBSReply, SettingsKeyRGBName, SettingsStorageKey } from "./constants";
 import { _window, emitter } from "./utils";
-import myBbs from "./functions/my-bbs";
+import { addMyLink, initBBSReplyTooltipListener, postProcessBBSReplies } from "./functions/bbs";
 import { addRGB, rmRGB } from "./functions/rgb-name";
 import debounce from "lodash/debounce";
 import initHttpInterception from "./functions/http-intercept";
@@ -23,7 +23,7 @@ provide("inSetting", ref(false));
 provide("userData", userData);
 
 const documentMutation = debounce(() => {
-  myBbs(userData);
+  addMyLink(userData);
   if (settings[SettingsKeyRGBName]) {
     setTimeout(() => {
       addRGB(userData.nickname);      
@@ -56,7 +56,11 @@ onMounted(() => {
   observer.observe(document.body, { childList: true, subtree: true });
 
   documentMutation();
-  initHttpInterception();
+  initHttpInterception(settings[SettingsKeyBBSReply]);
+  if (settings[SettingsKeyBBSReply]) {
+    initBBSReplyTooltipListener();
+    postProcessBBSReplies();
+  }
 });
 </script>
 

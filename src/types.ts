@@ -1,4 +1,4 @@
-import { SettingsKeyAutoDelete404, SettingsKeyAutoDeleteDay, SettingsKeyFoldItem, SettingsKeyRGBName } from "./constants"
+import { SettingsKeyAutoDelete404, SettingsKeyAutoDeleteDay, SettingsKeyBBSReply, SettingsKeyFoldItem, SettingsKeyRGBName } from "./constants";
 
 export type ListItem = {
   isCreate: boolean,
@@ -18,7 +18,8 @@ export type Settings = {
   [SettingsKeyAutoDeleteDay]: string,
   [SettingsKeyAutoDelete404]: boolean,
   [SettingsKeyFoldItem]: boolean,
-  [SettingsKeyRGBName]: boolean
+  [SettingsKeyRGBName]: boolean,
+  [SettingsKeyBBSReply]: boolean,
 }
 
 export type UserData = {
