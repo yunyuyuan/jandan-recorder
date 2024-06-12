@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { UnwrapNestedRefs, inject, onMounted, toRaw } from "vue";
-import { SettingsKeyAutoDeleteDay, SettingsKeyAutoDelete404, SettingsKeyFoldItem, SettingsStorageKey, DefaultSettings, SettingsKeyRGBName } from "../constants";
+import { SettingsKeyAutoDeleteDay, SettingsKeyAutoDelete404, SettingsKeyFoldItem, SettingsStorageKey, DefaultSettings, SettingsKeyRGBName, SettingsKeyBBSReply } from "../constants";
 import { Settings } from "../types";
 
 const version = import.meta.env.jandan_recorder_version_name;
@@ -48,6 +48,14 @@ const toggleRGBName = (e: Event) => {
   refreshSettings();
 };
 
+const toggleBBSReply = (e: Event) => {
+  updateSettings({
+    [SettingsKeyBBSReply]: (e.target! as HTMLInputElement).checked
+  });
+  refreshSettings();
+  alert("刷新网页后生效");
+};
+
 onMounted(() => {
   refreshSettings();
 });
@@ -89,7 +97,15 @@ onMounted(() => {
         type="checkbox"
         @change="toggleRGBName"
       >
-      🪄<span class="rainbow-text">个人名称RGB特效</span>🪄
+      🪄<span class="jandan-record-rainbow-text">个人名称RGB特效</span>🪄
+    </div>
+    <div title="给BBS加上回复按钮，修复楼层显示，气泡显示引用内容">
+      <input
+        v-model="settings[SettingsKeyBBSReply]"
+        type="checkbox"
+        @change="toggleBBSReply"
+      >
+      <span>BBS增强</span>
     </div>
     <div>
       <p>
