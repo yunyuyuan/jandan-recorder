@@ -32,6 +32,8 @@
   padding: 12px;
   background: white;
   max-width: 400px;
+  max-height: 50vh;
+  overflow: auto;
 }
 
 @keyframes rainbowanimation {

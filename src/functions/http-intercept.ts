@@ -1,4 +1,3 @@
-import { keyBy } from "lodash";
 import { AjaxSuccessEvent, InterceptUrls, PushRecordEvent } from "../constants";
 import { ListItem } from "../types";
 import { _window, emitter, $ } from "../utils";
@@ -89,7 +88,10 @@ export default function initHttpInterception(enableBBSReply = false) {
         emitter.emit(AjaxSuccessEvent);
         processResponse(response.config.url, parseRequestData(response.config.data), response.data);
         if (enableBBSReply && /^\/api\/forum\/replies\/\d+/.test(response.config.url)) {
-          postProcessBBSReplies(keyBy(response.data.data.list, "reply_id"));
+          postProcessBBSReplies({
+            response: response.data.data,
+            isAsc: response.config.url.includes("order=asc"),
+          });
         }
       } catch { /* empty */ }
       return response;
