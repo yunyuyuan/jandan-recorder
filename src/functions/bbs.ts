@@ -70,14 +70,14 @@ export function postProcessBBSReplies(data?: {response: any, isAsc: boolean}) {
           replyContentEl.innerHTML = replyContentEl.innerHTML.replaceAll(/(^|<br>)(@.*?\s+#(\d+)\((\d+)楼\))/g, (_, _1, _2, _3, _4) => {
             const reply_id = _3;
             const floor = +_4;
-            const page = Math.ceil(floor/40);
+            const page = Math.ceil((currentBBSConfig.isAsc ? floor : currentBBSConfig.total - floor + 1)/40);
             if (!currentBBSConfig.replies[reply_id]) {
               refPages.add(page);
             }
             return `${_1}<span class='jandan-record-reply-ref'>${_2}</span>`;
           });
         });
-        refPages.forEach(page => _window.axios.get(`/api/forum/replies/${currentBBSConfig.id}?order=asc&page=${page}`).then());
+        refPages.forEach(page => _window.axios.get(`/api/forum/replies/${currentBBSConfig.id}?order=${currentBBSConfig.isAsc ? "asc" : "desc"}&page=${page}`).then());
       }
     }
   }, 500);
