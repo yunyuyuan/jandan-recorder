@@ -1,4 +1,4 @@
-import { keyBy } from "lodash";
+import keyBy from "lodash/keyBy";
 import { UserData } from "../types";
 import { _window } from "../utils";
 
