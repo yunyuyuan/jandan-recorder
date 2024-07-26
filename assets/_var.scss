@@ -3,8 +3,7 @@
     @content;
   }
 }
-
-@mixin pc {
+@mixin pc{
   @media screen and (min-width: 769px) {
     @content;
   }

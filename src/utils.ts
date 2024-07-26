@@ -1,7 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { unsafeWindow } from "monkeyClient";
-import mitt from "mitt";
+import mitt from 'mitt';
 
 export const emitter = mitt();
 
