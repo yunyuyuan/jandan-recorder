@@ -89,7 +89,7 @@ onMounted(() => {
         type="checkbox"
         @change="toggleRGBName"
       >
-      🪄<span class="rainbow-text">个人名称RGB特效</span>🪄
+      🪄<span class="jandan-record-rainbow-text">个人名称RGB特效</span>🪄
     </div>
     <div>
       <p>

@@ -6,8 +6,8 @@ function processResponse(url: typeof InterceptUrls[number], requestData: any, re
   let item: ListItem | null = null;
   const now = Date.now();
   switch(url) {
-    case '/jandan-comment.php':
-    case '/api/comment/create':
+    case "/jandan-comment.php":
+    case "/api/comment/create":
       item = {
         url: `/t/${res}`,
         urlWithAnchor: `/t/${res}`,
@@ -15,12 +15,12 @@ function processResponse(url: typeof InterceptUrls[number], requestData: any, re
         content: requestData.comment,
         timestamp: now,
         lastCheck404: now,
-      }
+      };
       break;
-    case '/api/tucao/create':
-      if (res.msg == 'success') {
+    case "/api/tucao/create":
+      if (res.msg == "success") {
         // 一种特殊情况——在首页文章里的吐槽
-        const isPost = _window.location.pathname.startsWith('/p/');
+        const isPost = _window.location.pathname.startsWith("/p/");
         item = {
           url: isPost ? `/p/${requestData.comment_post_ID}` : `/t/${requestData.comment_id}`,
           urlWithAnchor: isPost ? `/p/${requestData.comment_post_ID}#${res.data.comment_ID}` : `/t/${requestData.comment_id}#tucao-${res.data.comment_ID}`,
@@ -28,11 +28,11 @@ function processResponse(url: typeof InterceptUrls[number], requestData: any, re
           content: requestData.content,
           timestamp: now,
           lastCheck404: now,
-        }
+        };
       }
       break;
     case "/api/forum/replies":
-      if (res.msg == 'success') {        
+      if (res.msg == "success") {        
         item = {
           url: `/bbs#/topic/${requestData.post_id}`,
           urlWithAnchor: `/bbs#/topic/${requestData.post_id}`,
@@ -40,7 +40,7 @@ function processResponse(url: typeof InterceptUrls[number], requestData: any, re
           content: requestData.content,
           timestamp: now,
           lastCheck404: now,
-        }
+        };
       }
       break;
   }
@@ -50,7 +50,7 @@ function processResponse(url: typeof InterceptUrls[number], requestData: any, re
 function parseRequestData(requestData: any) {
   let result = requestData;
   const parsedObj: any = {};
-  if (typeof requestData == 'string') {
+  if (typeof requestData == "string") {
     try {
       return JSON.parse(requestData);
     } catch {
@@ -72,12 +72,12 @@ export default function initHttpInterception() {
   if ($) {
     $(document).on("ajaxSuccess", function(_event: any, _jqXHR: JQuery.jqXHR, settings: JQuery.AjaxSettings, data: any) {
       try {
-        emitter.emit(AjaxSuccessEvent)
+        emitter.emit(AjaxSuccessEvent);
         const url = settings.url! as any;
         if (InterceptUrls.includes(url)) {
           processResponse(url, parseRequestData(settings.data), data);
         }
-      } catch {}
+      } catch {/* empty */}
     });
 
   }
@@ -85,9 +85,9 @@ export default function initHttpInterception() {
   if (_window.axios) {
     _window.axios.interceptors.response.use((response: any) => {
       try {
-        emitter.emit(AjaxSuccessEvent)
+        emitter.emit(AjaxSuccessEvent);
         processResponse(response.config.url, parseRequestData(response.config.data), response.data);
-      } catch {}
+      } catch {/* empty */}
       return response;
     });
   }
