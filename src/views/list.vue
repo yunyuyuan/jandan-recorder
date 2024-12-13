@@ -1,9 +1,24 @@
 <script setup lang="ts">
-import { inject, reactive, toRaw, watch, readonly, computed, onMounted, UnwrapNestedRefs, Ref } from "vue";
+import { inject, reactive, markRaw, toRaw, watch, readonly, computed, onMounted, UnwrapNestedRefs, Ref } from "vue";
 import { ListItem, Settings } from "../types";
 import { emitter } from "../utils";
 import { OneDay, PushRecordEvent, SettingsKeyAutoDelete404, SettingsKeyAutoDeleteDay, SettingsKeyFoldItem } from "../constants";
 
+const theadItems = markRaw([{
+  name: "日期",
+},{
+  name: "类型",
+},{
+  name: "内容",
+},{
+  name: "网址",
+  width: "40px",
+  keepWords: true
+},{
+  name: "操作",
+  width: "40px",
+  keepWords: true
+}]);
 
 const settings = readonly(inject<UnwrapNestedRefs<Settings>>("settings")!);
 const inSetting = readonly(inject<Ref<boolean>>("inSetting")!);
@@ -118,10 +133,14 @@ onMounted(() => {
       <thead>
         <tr>
           <th
-            v-for="i of ['日期', '类型', '内容', '网址', '操作']"
-            :key="i"
+            v-for="i of theadItems"
+            :key="i.name"
+            :style="{
+              'word-break': i.keepWords ? 'keep-all' : 'unset',
+              'min-width': i.width ?? 'unset'
+            }"
           >
-            {{ i }}
+            {{ i.name }}
           </th>
         </tr>
       </thead>
@@ -189,6 +208,11 @@ table {
 
   tbody {
     tr {
+      td {
+        word-break: break-word;
+        white-space: pre-wrap;
+      }
+
       &.is-child {
         td {
           border-color: transparent;

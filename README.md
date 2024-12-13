@@ -18,3 +18,6 @@
 
 ## 更新日志
 [changelog](https://github.com/yunyuyuan/jandan-recorder/blob/main/CHANGELOG.md)
+
+## 博客
+> [记录油猴脚本的开发过程](https://blog.yunyuyuan.net/articles/2064)
