@@ -28,7 +28,7 @@
     "vite": "^5.0.11",
     "vite-plugin-monkey": "^3.5.1",
     "vue-eslint-parser": "^9.4.2",
-    "vue-tsc": "^2.0.5"
+    "vue-tsc": "2.0.5"
   },
   "dependencies": {
     "mitt": "^3.0.1",
